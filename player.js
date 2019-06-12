@@ -8,31 +8,6 @@ class Player
         this.score = 0;
     }
 
-
-    move(dir)
-    {
-        this.pos.x += dir;
-        if(game.arena.collisionCheck(this)) {
-            this.pos.x -= dir;
-        };
-    }
-
-    rotate(dir) {
-        const pos = this.pos.x;
-        let offset = 1;
-        
-        rotateMatrix(this.matrix, dir);
-        while(game.arena.collisionCheck(this)) {
-            this.pos.x += offset;
-            offset = -(offset + (offset > 0 ? 1 : -1));
-            if(offset > this.matrix[0].length) {
-                rotateMatrix(this.matrix, -dir);
-                this.pos.x = pos;
-                return;
-            }
-        }
-    }
-
     createPiece(type, c) {
 
         if (type === 'T') {

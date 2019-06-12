@@ -18,6 +18,30 @@ class Game
         }
     }
 
+    move(dir)
+    {
+        this.player.pos.x += dir;
+        if(this.arena.collisionCheck(this.player)) {
+            this.player.pos.x -= dir;
+        };
+    }
+
+    rotate(dir) {
+        const pos = this.player.pos.x;
+        let offset = 1;
+        
+        rotateMatrix(this.player.matrix, dir);
+        while(this.arena.collisionCheck(this.player)) {
+            this.player.pos.x += offset;
+            offset = -(offset + (offset > 0 ? 1 : -1));
+            if(offset > this.player.matrix[0].length) {
+                rotateMatrix(this.player.matrix, -dir);
+                this.player.pos.x = pos;
+                return;
+            }
+        }
+    }
+
 
     autoDrop() {
         this.player.pos.y++;
@@ -30,6 +54,20 @@ class Game
             this.player.updateScore();
         }
     
+        this.dropCounter = 0;
+    }
+
+    fullDrop() {
+        this.player.pos.y++;
+        while(!this.arena.collisionCheck(this.player)) {
+            this.player.pos.y++;
+        }
+
+        this.player.pos.y--;
+        this.arena.merge(this.player);
+        this.reset();
+        this.arena.sweep(this.player);
+        this.player.updateScore();
         this.dropCounter = 0;
     }
 
