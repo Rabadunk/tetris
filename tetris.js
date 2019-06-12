@@ -4,7 +4,7 @@ class Tetris
     {
         this.canvas = document.getElementById('tetris');
         this.context = this.canvas.getContext('2d');
-        this.context.scale(20, 20);
+        this.context.scale(40, 40);
         this.lastTime = 0;
         this.game = new Game
         this.game.reset();
