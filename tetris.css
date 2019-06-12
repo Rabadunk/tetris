@@ -12,6 +12,7 @@ h1 {
 }
 
 canvas {
+    float: center;
     width: 240px;
     padding-left: 0;
     padding-right: 0;
