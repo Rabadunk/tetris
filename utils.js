@@ -7,6 +7,7 @@ function createMatrix(w, h) {
     return matrix;
 }
 
+
 function rotateMatrix(matrix, dir) {
     for(let y = 0; y < matrix.length; ++y) {
         

@@ -1,76 +1,64 @@
-const canvas = document.getElementById('tetris');
-const context = canvas.getContext('2d');
-context.scale(20, 20);
+class Tetris
+{
+    constructor() 
+    {
+        this.canvas = document.getElementById('tetris');
+        this.context = this.canvas.getContext('2d');
+        this.context.scale(20, 20);
+        this.lastTime = 0;
+        this.game = new Game
+        this.game.reset();
 
-const arena = new Arena;
+        const update = (time = 0) => {
+            const deltaTime = time - this.lastTime;
+            this.lastTime = time;
+        
+            this.game.updateDropTime(deltaTime);
+        
+            this.clearCanvas();
+            this.draw();
+            requestAnimationFrame(update);
+        }
 
-const player = new Player;
-
-let lastTime = 0;
-
-function updateScore() {
-    document.getElementById('score').innerText = player.score;
-}
-
-function update(time = 0) {
-    const deltaTime = time - lastTime;
-    lastTime = time;
-
-    player.update(deltaTime);
-
-    clearCanvas();
-    draw();
-    requestAnimationFrame(update);
-}
-
-function draw() {
-    clearCanvas();
-    drawMatrix(arena.matrix, {x: 0, y: 0});
-    drawMatrix(player.matrix, player.pos);
-}
-
-function clearCanvas() {
-    context.fillStyle = "#000";
-    context.fillRect(0, 0, canvas.clientWidth, canvas.height)
-}
-
-function drawMatrix(matrix, offset) {
-
-    matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-            
-            value2 = (55 * Math.random() | 0) + 1;
-            value3 = (55 * Math.random() | 0) + 1;
-
-            if (value !== 0) {
-                context.fillStyle = `rgb(
-                    ${value - value2},
-                    ${value - value3},
-                    ${value})`;
-                context.fillRect(x + offset.x, 
-                    y + offset.y, 
-                    1, 1);
-            }
-    
-        });
-    });
-
-}
-
-document.addEventListener('keydown', event => {
-    if(event.keyCode === 37) {
-        player.move(-1);
-    } else if (event.keyCode === 39) {
-        player.move(1);
-    } else if (event.keyCode === 40) {
-        player.drop();
-    } else if (event.keyCode === 81) {
-        player.rotate(-1);
-    } else if (event.keyCode === 87) {
-        player.rotate(1);
+        update();
     }
-});
 
-player.reset();
-updateScore();
-update();
+    draw() {
+        this.clearCanvas();
+        this.drawMatrix(this.game.arena.matrix, {x: 0, y: 0});
+        this.drawMatrix(this.game.player.matrix, this.game.player.pos);
+    }
+
+    drawMatrix(matrix, offset) {
+
+        matrix.forEach((row, y) => {
+            row.forEach((value, x) => {
+                
+                let value2 = (55 * Math.random() | 0) + 1;
+                let value3 = (55 * Math.random() | 0) + 1;
+    
+                if (value !== 0) {
+                    this.context.fillStyle = `rgb(
+                        ${value - value2},
+                        ${value - value3},
+                        ${value})`;
+                    this.context.fillRect(x + offset.x, 
+                        y + offset.y, 
+                        1, 1);
+                }
+        
+            });
+        });
+    
+    }
+    
+    clearCanvas() {
+        this.context.fillStyle = "#000";
+        this.context.fillRect(0, 0, this.canvas.clientWidth, this.canvas.height)
+    }
+
+    loop() {
+        this.game.reset();
+        this.game.player.updateScore();
+    }
+}

@@ -6,7 +6,7 @@ class Arena
     }
 
 
-    sweep() {
+    sweep(player) {
         let rowCount = 1;
         outer: for (let y = this.matrix.length - 1; y > 0; --y) {
             for (let x = 0; x < this.matrix[y].length; ++x) {
@@ -24,7 +24,7 @@ class Arena
         }
     }
 
-    collide(player) {
+    collisionCheck(player) {
         const [m, o] = [player.matrix, player.pos]
     
         for(let y = 0; y < m.length; ++y) {

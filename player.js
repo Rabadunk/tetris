@@ -3,21 +3,16 @@ class Player
 
     constructor()
     {
-
-        this.dropCounter = 0;
-        this.dropInterval = 1000;
-
         this.pos = {x: 0, y: 0};
         this.matrix = null;
         this.score = 0;
-
     }
 
 
     move(dir)
     {
         this.pos.x += dir;
-        if(arena.collide(this)) {
+        if(game.arena.collisionCheck(this)) {
             this.pos.x -= dir;
         };
     }
@@ -27,7 +22,7 @@ class Player
         let offset = 1;
         
         rotateMatrix(this.matrix, dir);
-        while(arena.collide(this)) {
+        while(game.arena.collisionCheck(this)) {
             this.pos.x += offset;
             offset = -(offset + (offset > 0 ? 1 : -1));
             if(offset > this.matrix[0].length) {
@@ -35,43 +30,6 @@ class Player
                 this.pos.x = pos;
                 return;
             }
-        }
-    }
-
-    drop() {
-        this.pos.y++;
-    
-        if(arena.collide(this)) {
-            this.pos.y--;
-            arena.merge(this);
-            this.reset();
-            arena.sweep();
-            updateScore();
-        }
-    
-        this.dropCounter = 0;
-    }
-
-    update(deltaTime)
-    {
-        this.dropCounter += deltaTime;
-        if(this.dropCounter > this.dropInterval) {
-            this.drop();
-        }
-    }
-
-    reset() {
-        const pieces = 'ILJOTSZ';
-        let piecesNum = pieces.length * Math.random() | 0;
-        let colorNum = 55 * Math.random() | 0;
-        console.log(piecesNum);
-        player.matrix = this.createPiece(pieces[piecesNum], colorNum + 201);
-        player.pos.y = 0;
-        player.pos.x = (arena.matrix[0].length / 2 | 0) - (player.matrix[0].length /2 | 0);
-    
-        if (arena.collide(this)) {
-            arena.matrix.forEach(row => row.fill(0));
-            player.score = 0;
         }
     }
 
@@ -122,6 +80,21 @@ class Player
             ]
         }
     }
+
+    getRandomPiece() {
+        const pieces = 'ILJOTSZ';
+        let piecesNum = pieces.length * Math.random() | 0;
+        let colorNum = 55 * Math.random() | 0;
+
+        let piece = this.createPiece(pieces[piecesNum], colorNum + 201);
+        console.log(piece);
+        return piece;
+    }
+
+    updateScore() {
+        document.getElementById('score').innerText = this.score;
+    }
+    
 
 }
 
