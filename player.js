@@ -17,7 +17,7 @@ class Player
     move(dir)
     {
         this.pos.x += dir;
-        if(collide(arena, this)) {
+        if(arena.collide(this)) {
             this.pos.x -= dir;
         };
     }
@@ -26,12 +26,12 @@ class Player
         const pos = this.pos.x;
         let offset = 1;
         
-        rotate(this.matrix, dir);
-        while(collide(arena, this)) {
+        rotateMatrix(this.matrix, dir);
+        while(arena.collide(this)) {
             this.pos.x += offset;
             offset = -(offset + (offset > 0 ? 1 : -1));
             if(offset > this.matrix[0].length) {
-                rotate(this.matrix, -dir);
+                rotateMatrix(this.matrix, -dir);
                 this.pos.x = pos;
                 return;
             }
@@ -41,11 +41,11 @@ class Player
     drop() {
         this.pos.y++;
     
-        if(collide(arena, this)) {
+        if(arena.collide(this)) {
             this.pos.y--;
-            merge(arena, this);
+            arena.merge(this);
             this.reset();
-            arenaSweep();
+            arena.sweep();
             updateScore();
         }
     
@@ -65,13 +65,61 @@ class Player
         let piecesNum = pieces.length * Math.random() | 0;
         let colorNum = 55 * Math.random() | 0;
         console.log(piecesNum);
-        player.matrix = createPiece(pieces[piecesNum], colorNum + 201);
+        player.matrix = this.createPiece(pieces[piecesNum], colorNum + 201);
         player.pos.y = 0;
-        player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length /2 | 0);
+        player.pos.x = (arena.matrix[0].length / 2 | 0) - (player.matrix[0].length /2 | 0);
     
-        if (collide(arena, player)) {
-            arena.forEach(row => row.fill(0));
+        if (arena.collide(this)) {
+            arena.matrix.forEach(row => row.fill(0));
             player.score = 0;
+        }
+    }
+
+    createPiece(type, c) {
+
+        if (type === 'T') {
+            return [
+                [0, 0, 0],
+                [c, c, c],
+                [0, c, 0]
+            ];
+        } else if (type == 'O') {
+            return [
+                [0, 0, 0],
+                [0, c, c],
+                [0, c, c]
+            ]
+        } else if (type == 'L') {
+            return [
+                [0, c, 0],
+                [0, c, 0],
+                [0, c, c]
+            ]
+        } else if (type == 'J') {
+            return [
+                [0, c, 0],
+                [0, c, 0],
+                [c, c, 0]
+            ]
+        } else if (type == 'I') {
+            return [
+                [0, c, 0, 0],
+                [0, c, 0, 0],
+                [0, c, 0, 0],
+                [0, c, 0, 0]
+            ]
+        } else if (type == 'Z') {
+            return [
+                [0, 0, 0],
+                [c, c, 0],
+                [0, c, c]
+            ]
+        } else if (type == 'S') {
+            return [
+                [0, 0, 0],
+                [0, c, c],
+                [c, c, 0]
+            ]
         }
     }
 
