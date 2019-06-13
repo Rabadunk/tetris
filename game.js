@@ -6,7 +6,7 @@ class Game
         this.dropCounter = 0;
         this.dropInterval = 1000;
         this.arena = new Arena;
-        this.player = new Player;
+        this.player = new Tetrimino;
     }
     
     
